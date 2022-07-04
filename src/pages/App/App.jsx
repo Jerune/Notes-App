@@ -17,10 +17,16 @@ export default function App() {
     localStorage.setItem("notes", JSON.stringify(notes));
   }, [notes]);
 
+  function getNewTimestamp() {
+    const timeStamp = Math.floor(Date.now() / 1000);
+    return timeStamp;
+  }
+
   function createNewNote() {
     const newNote = {
       id: nanoid(),
       body: "# Type your markdown note's title here",
+      lastModified: getNewTimestamp(),
     };
     setNotes((prevNotes) => [newNote, ...prevNotes]);
     setCurrentNoteId(newNote.id);
@@ -30,7 +36,7 @@ export default function App() {
     setNotes((oldNotes) =>
       oldNotes.map((oldNote) => {
         return oldNote.id === currentNoteId
-          ? { ...oldNote, body: text }
+          ? { ...oldNote, body: text, lastModified: getNewTimestamp() }
           : oldNote;
       })
     );
